@@ -3,12 +3,12 @@ version: 2.1
 # 1. Definição das tarefas (Jobs)
 jobs:
   e2e-tests:
-    # Máquina onde o job vai rodar (Imagem Docker oficial do CircleCI com Node 24)
+    # Máquina corrigida usando uma versão exata do Node 24 preparada para testes com navegadores
     docker:
-      - image: cimg/node:24.x
+      - image: cimg/node:24.0.0-browsers
     
     steps:
-      # Clone do projeto (Equivalente ao actions/checkout)
+      # Clone do projeto
       - checkout
 
       # Instalação das dependências do projeto
