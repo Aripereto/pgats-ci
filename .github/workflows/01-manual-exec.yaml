@@ -5,14 +5,18 @@ name: "Execução Manual"
 
 # gatilhos / triggers - regras de disparo
 # gatilho manual = workflow_dispatch
-
 on:
     workflow_dispatch:
 
-#tarefas dentro da pipeline = jobs
+# Permissões necessárias para que a Action consiga criar o relatório visual na aba do GitHub
+permissions:
+    id-token: write
+    contents: read
+    checks: write
 
+# tarefas dentro da pipeline = jobs
 jobs:
-    #nome do job
+    # nome do job
     e2e-tests:
         # maquina onde o job vai rodar
         runs-on: ubuntu-latest
@@ -22,7 +26,7 @@ jobs:
             # clone do projeto
             - uses: actions/checkout@v4
 
-            # instalção do node
+            # instalação do node
             - uses: actions/setup-node@v4
               with:
                   node-version: 24.x
@@ -31,7 +35,7 @@ jobs:
             - name: Instalando Yarn
               run: npm install -g yarn
             
-            #   instalação das dependências
+            # instalação das dependências
             - name: Instalando dependências
               run: yarn
             
@@ -39,6 +43,17 @@ jobs:
             - name: Instalando Browsers do Playwright
               run: yarn playwright install
             
-            # executar os testes e2e
+            # executar os testes e2e forçando a geração do arquivo JUnit XML
             - name: Executando testes e2e
-              run: yarn run e2e
+              run: yarn run e2e --reporter=junit
+              env:
+                PLAYWRIGHT_JUNIT_OUTPUT_NAME: results.xml
+
+            # Criação do painel interativo e intuitivo no GitHub
+            - name: Repórter de Testes
+              uses: dorny/test-reporter@v3.0.0
+              if: always() # Garante que o relatório seja gerado mesmo se houver testes falhando
+              with:
+                name: Dashboard de Testes E2E # Nome que vai aparecer no menu do GitHub
+                path: results.xml             # O arquivo gerado pelo Playwright no passo anterior
+                reporter: java-junit          # O formato do leitor
