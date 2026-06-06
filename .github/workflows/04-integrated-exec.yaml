@@ -1,4 +1,4 @@
-# CI de Nível 04 - Pipeline Integrada ao Build do Código
+# CI de Nível 04 - Pipeline Integrada ao Build do Código.
 
 # nome da pipeline
 name: 'Execução Integrada'
