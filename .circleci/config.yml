@@ -6,7 +6,7 @@ jobs:
     # Máquina corrigida usando uma versão exata do Node 24 preparada para testes com navegadores
     docker:
       - image: cimg/node:24.0.0-browsers
-    
+
     steps:
       # Clone do projeto
       - checkout
@@ -33,7 +33,7 @@ workflows:
       # Criamos uma etapa de pausa que exige clique no painel do CircleCI
       - aguardar-clique:
           type: approval
-      
+
       # O teste de e2e só roda DEPOIS que você clicar para aprovar
       - e2e-tests:
           requires:
